@@ -69,6 +69,15 @@ def detect(im):
     cls_keyps = cls_keyps_ if cls_keyps_ is not None else cls_keyps
 
     return cls_boxes, cls_segms, cls_keyps
+
+def prune(kps, boxes, boxes_thresh=0.9, kps_thresh=2):
+
+    keypoints = list()
+    for k in range(0, len(boxes)):
+        if boxes[k][-1] >= 0.9: #-1 index is probability
+            keypoints.append(kps[k])
+            
+    return keypoints
     
 def cleanup():
     workspace.ResetWorkspace()

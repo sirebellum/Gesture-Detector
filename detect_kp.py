@@ -5,14 +5,17 @@ import detectron.utils.vis as vis_utils
 try:
   video = cv2.VideoCapture("video.avi")
   _, im = video.read()
+  #im = cv2.imread("image.jpg")
   while im is not None:
+    
+    #Detect stuff and convert to usable form
     cls_boxes, cls_segms, cls_keyps = kpdetection.detect(im)
-    #Convert to usable form
     boxes, segms, keyps, classes = \
         vis_utils.convert_from_cls_format(cls_boxes,
                                           cls_segms,
                                           cls_keyps)
 
+    #Draw keypoints on frame
     visualize = False
     if visualize:
         vis = vis_utils.vis_one_image_opencv(im,
@@ -21,7 +24,14 @@ try:
         cv2.imshow("image", vis)
         cv2.waitKey(1000)
     
+    #Remove keypoints below thresholds
+    keyps = kpdetection.prune(keyps, boxes)
+    
+    print len(keyps)
+    
+    #Read next frame
     _, im = video.read()
+    #im = None
     
   kpdetection.cleanup()
 
