@@ -3,7 +3,9 @@ import kpdetection
 import detectron.utils.vis as vis_utils
 
 try:
-    im = cv2.imread("image.jpg")
+  video = cv2.VideoCapture("video.avi")
+  _, im = video.read()
+  while im is not None:
     cls_boxes, cls_segms, cls_keyps = kpdetection.detect(im)
 
     visualize = False
@@ -14,7 +16,9 @@ try:
         cv2.imshow("image", vis)
         cv2.waitKey(1000)
     
-    kpdetection.cleanup()
+    _, im = video.read()
+    
+  kpdetection.cleanup()
 
 except KeyboardInterrupt:
     kpdetection.cleanup()
