@@ -79,6 +79,14 @@ def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
             keypoints.append(kps[k])
             boxes.append(bxes[k])
             
+    #0 out keypoints below threshold
+    for keypoint in keypoints:
+        for i in range(0, len(keypoint[2])): #2 is logits index
+            prob = keypoint[2][i]
+            if prob < kps_thresh:
+                keypoint[0][i] = 0
+                keypoint[1][i] = 0
+            
     return keypoints, boxes
     
 def cleanup():
