@@ -7,6 +7,11 @@ try:
   _, im = video.read()
   while im is not None:
     cls_boxes, cls_segms, cls_keyps = kpdetection.detect(im)
+    #Convert to usable form
+    boxes, segms, keyps, classes = \
+        vis_utils.convert_from_cls_format(cls_boxes,
+                                          cls_segms,
+                                          cls_keyps)
 
     visualize = False
     if visualize:
