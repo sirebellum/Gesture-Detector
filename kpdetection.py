@@ -46,8 +46,9 @@ cfg_orig = load_cfg(yaml.dump(cfg))
 pkl = "model_files/kps_R-50-FPN.pkl"
 yml = "model_files/kps_R-50-FPN.yaml"
 if not os.path.isfile(pkl):
-    exit("Please download model files into model_files")
+    exit("MODEL FILES NOT FOUND (check kpdetection.py)")
 
+#Config Setup
 cfg.immutable(False)
 merge_cfg_from_cfg(cfg_orig)
 merge_cfg_from_file(yml)
@@ -56,6 +57,7 @@ cfg.NUM_GPUS = 1
 assert_and_infer_cfg(cache_urls=False)
 model = model_engine.initialize_model_from_cfg(weights_file)
 
+#Detect all keypoints in im (image/frame)
 def detect(im):
     
     proposal_boxes, cls_boxes, cls_segms, cls_keyps \
@@ -70,6 +72,8 @@ def detect(im):
 
     return cls_boxes, cls_segms, cls_keyps
 
+#Remove instances with low class confidence
+#Remove keypoints with low logits score (mimics detectron vis)
 def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
 
     keypoints = list()
@@ -88,6 +92,7 @@ def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
                 keypoint[1][i] = 0
             
     return keypoints, boxes
-    
+
+#Clean up gpu stuff
 def cleanup():
     workspace.ResetWorkspace()
