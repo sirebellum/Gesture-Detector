@@ -14,7 +14,10 @@ try:
         vis_utils.convert_from_cls_format(cls_boxes,
                                           cls_segms,
                                           cls_keyps)
-
+    
+    #Remove keypoints below thresholds
+    keyps, boxes = kpdetection.prune(keyps, boxes)
+    
     #Draw keypoints on frame
     visualize = False
     if visualize:
@@ -23,11 +26,6 @@ try:
                                       keypoints=cls_keyps)
         cv2.imshow("image", vis)
         cv2.waitKey(1000)
-    
-    #Remove keypoints below thresholds
-    keyps = kpdetection.prune(keyps, boxes)
-    
-    print len(keyps)
     
     #Read next frame
     _, im = video.read()
