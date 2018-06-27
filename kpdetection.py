@@ -1,5 +1,7 @@
-"""Perform keypoint detection on frame"""
-
+"""Perform keypoint detection on frame using
+   Facebook's Detectron library, found at
+   github.com/facebookresearch/Detectron"""
+   
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function

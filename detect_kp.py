@@ -1,5 +1,5 @@
 import cv2
-import kpdetection
+import kpdetection #Uses Detectron API to return keypoints
 import detectron.utils.vis as vis_utils
 
 try:
@@ -32,7 +32,7 @@ try:
     #im = None
     
   kpdetection.cleanup()
-
+  
 except KeyboardInterrupt:
     kpdetection.cleanup()
     exit()
