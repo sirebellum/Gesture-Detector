@@ -24,7 +24,7 @@ def normalize_data(keypoints):
     return kps_norm
 
 #open stream from media source
-media = cv2.VideoCapture(0)
+media = cv2.VideoCapture("train.mp4")
 if not media.isOpened():
     exit("Couldn't access webcam (check permissions?)")
 
@@ -50,10 +50,12 @@ try:
     
     ###Visualize and record keypoints###
     while record == '': #while enter is the only thing pressed
+      data = list()
+      for x in range(0, 30): #read 30 frames at a time
         #Read next frame
         _, frame = media.read()
         if frame is None: #end of stream
-            raise ValueError
+            break
         
         #Detect stuff and convert to usable form
         cls_boxes, cls_segms, cls_keyps = kpdetection.detect(frame)
@@ -61,31 +63,33 @@ try:
                 vis_utils.convert_from_cls_format(cls_boxes,
                                               cls_segms,
                                               cls_keyps)
-        #Remove keypoints below thresholds
-        keyps, boxes = kpdetection.prune(keyps, boxes)
-        
-        if len(keyps) > 0: #if anything detected
-        
-            #Visualize normalized kps
-            instance = normalize_kp(keyps[0])
-            blackbox = np.zeros(shape=(255, 255), dtype=np.uint8)
-            for x in range(0, 17):
-                cv2.circle(blackbox,
-                           (instance[0][x], instance[1][x]),
-                           1, (255, 255, 255),
-                           thickness=2, lineType=8, shift=0)
-            cv2.imshow("keypoints", blackbox)
-            #Visualize keypoints on image
-            vis = vis_utils.vis_one_image_opencv(frame,
-                                             cls_boxes,
-                                             keypoints=cls_keyps)
-            cv2.imshow("image", vis)
-            cv2.waitKey(100)
             
-            #Prompt user for saving individual instance
-            record = raw_input("Continue recording for "+clas+"? (enter/n): ")
-            if record == '':
-                keypoints[clas].append(keyps[0])
+        if keyps is not None: #if anything detected
+          #Remove keypoints below thresholds
+          keyps, boxes = kpdetection.prune(keyps, boxes)
+          if len(keyps) > 0: #if anything still detected
+            instance = normalize_kp(keyps[0])
+            data.append(instance)
+            
+      #Visualize normalized kps
+      blackbox = np.zeros(shape=(255, 255), dtype=np.uint8)
+      for x in range(0, 17):
+          cv2.circle(blackbox,
+                     (instance[0][x], instance[1][x]),
+                     1, (255, 255, 255),
+                     thickness=2, lineType=8, shift=0)
+      cv2.imshow("keypoints", blackbox)
+      #Visualize keypoints on image
+      vis = vis_utils.vis_one_image_opencv(frame,
+                                       cls_boxes,
+                                       keypoints=cls_keyps)
+      cv2.imshow("image", vis)
+      cv2.waitKey(100)
+            
+      #Prompt user for saving individual instance
+      record = raw_input("Continue recording for "+clas+"? (enter/n): ")
+      if record == '':
+          keypoints[clas] = keypoints[clas] + data
             
  
     print "Done recording for", clas+"."
