@@ -31,12 +31,6 @@ c2_utils.import_detectron_ops()
 # thread safe and causes unwanted GPU memory allocations.
 cv2.ocl.setUseOpenCL(False)
 
-# infer.py
-#   --im [path/to/image.jpg]
-#   --rpn-model [path/to/rpn/model.pkl]
-#   --rpn-config [path/to/rpn/config.yaml]
-#   [model1] [config1] [model2] [config2] ...
-
 workspace.GlobalInit(['caffe2', '--caffe2_log_level=0'])
 setup_logging(__name__)
 logger = logging.getLogger(__name__)
@@ -48,7 +42,6 @@ cfg_orig = load_cfg(yaml.dump(cfg))
 models_dir = os.path.join(os.path.dirname(__file__), 'model_files')
 pkl = models_dir+"/kps_R-50-FPN.pkl"
 yml = models_dir+"/kps_R-50-FPN.yaml"
-print (pkl)
 if not os.path.isfile(pkl):
     exit("MODEL FILES NOT FOUND (check kpdetection.py)")
 
@@ -78,6 +71,7 @@ def detect(im):
 
 #Remove instances with low class confidence
 #Remove keypoints with low logits score (mimics detectron vis)
+#kps[instance][x, y, logit, prob]
 def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
 
     keypoints = list()
@@ -92,8 +86,8 @@ def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
         for i in range(0, len(keypoint[2])): #2 is logits index
             prob = keypoint[2][i]
             if prob < kps_thresh:
-                keypoint[0][i] = 0
-                keypoint[1][i] = 0
+                keypoint[0][i] = None
+                keypoint[1][i] = None
             
     return keypoints, boxes
 
