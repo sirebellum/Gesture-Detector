@@ -6,7 +6,7 @@ import kpdetection #Uses Detectron API to return keypoints
 import detectron.utils.vis as vis_utils
 
 try:
-  video = cv2.VideoCapture("video.avi")
+  video = cv2.VideoCapture(0)
   _, im = video.read()
   #im = cv2.imread("image.jpg")
   while im is not None:
