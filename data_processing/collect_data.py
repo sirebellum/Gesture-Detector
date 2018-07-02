@@ -64,10 +64,8 @@ try:
                                               cls_segms,
                                               cls_keyps)
             
-        if keyps is not None: #if anything detected
-          #Remove keypoints below thresholds
-          keyps, boxes = kpdetection.prune(keyps, boxes)
-          if len(keyps) > 0: #if anything still detected
+        keyps, boxes = kpdetection.prune(keyps, boxes)
+        if len(keyps) > 0: #if anything still detected
             instance = normalize_kp(keyps[0])
             data.append(instance)
             

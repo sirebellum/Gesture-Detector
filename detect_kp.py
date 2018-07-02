@@ -28,10 +28,8 @@ try:
                                           cls_segms,
                                           cls_keyps)
     
-    if keyps is not None:
-        #Remove keypoints below thresholds
-        keyps, boxes = kpdetection.prune(keyps, boxes)
-    else: keyps = list()
+    #Remove keypoints below thresholds
+    keyps, boxes = kpdetection.prune(keyps, boxes)
     
     #Draw keypoints on frame
     visualize = True
