@@ -82,7 +82,7 @@ try:
                                        cls_boxes,
                                        keypoints=cls_keyps)
       cv2.imshow("image", vis)
-      cv2.waitKey(100)
+      cv2.waitKey(1)
             
       #Prompt user for saving individual instance
       record = raw_input("Continue recording for "+clas+"? (enter/n): ")
