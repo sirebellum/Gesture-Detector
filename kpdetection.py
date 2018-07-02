@@ -75,7 +75,7 @@ def detect(im):
 def prune(kps, bxes, boxes_thresh=0.9, kps_thresh=2):
 
     if kps is None: #if no keypoints, return empty list
-        return list()
+        return list(), list()
 
     keypoints = list()
     boxes = list()
