@@ -38,7 +38,6 @@ try:
                                       cls_boxes,
                                       keypoints=cls_keyps)
         cv2.imshow("image", vis)
-        cv2.waitKey(1)
     
     #SVM
     if len(keyps) > 0: #if anything detected
