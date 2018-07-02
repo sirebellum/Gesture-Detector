@@ -67,7 +67,7 @@ driver = "c"
 try:
   while driver == "c":
   
-    #Define class for this round
+    ###User defined recording class###
     print classes
     clas = raw_input("what class would you like to record for?: ")
     record = ''
@@ -75,7 +75,7 @@ try:
        print "Please specify a real class"
        record = "n"
     
-    #Visualize and store keypoints
+    ###Visualize and record keypoints###
     while record == '': #while enter is the only thing pressed
         #Read next frame
         _, frame = media.read()
@@ -92,7 +92,17 @@ try:
         #Remove keypoints below thresholds
         keyps, boxes = kpdetection.prune(keyps, boxes)
         
-        #Draw keypoints on frame
+        #Visualize normalized kps
+        instance = normalize_kp(keyps[0])
+        blackbox = np.zeros(shape=(255, 255), dtype=np.uint8)
+        for x in range(0, 17):
+            cv2.circle(blackbox,
+                       (instance[0][x], instance[1][x]),
+                       1, (255, 255, 255),
+                       thickness=2, lineType=8, shift=0)
+        cv2.imshow("keypoints", blackbox)
+        
+        #Visualize keypoints on image
         vis = vis_utils.vis_one_image_opencv(frame,
                                          cls_boxes,
                                          keypoints=cls_keyps)
@@ -103,11 +113,13 @@ try:
         if record == '':
             keypoints[clas].append(keyps[0])
             
+ 
     print "Done recording for", clas+"."
     for clas in classes:
         print len(keypoints[clas]), "total keypoints recorded for", clas+"."
     driver = raw_input("Continue, review, or quit? (c/r/q): ")
   
+  ###Clean up and pickle###
   #fit all keypoints within box
   keypoints = normalize_data(keypoints)
   
