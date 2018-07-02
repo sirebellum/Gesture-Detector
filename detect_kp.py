@@ -14,7 +14,7 @@ filename = "svm.p"
 clf = pickle.load(open(filename, "rb"))
 
 try:
-  video = cv2.VideoCapture(0)
+  video = cv2.VideoCapture("data_processing/test.mp4")
   if not video.isOpened():
       exit("Couldn't access webcam (check permissions?)")
   _, im = video.read()
@@ -38,7 +38,7 @@ try:
                                       cls_boxes,
                                       keypoints=cls_keyps)
         cv2.imshow("image", vis)
-        cv2.waitKey(250)
+        cv2.waitKey(10)
     
     #SVM
     if len(keyps) > 0: #if anything detected
@@ -50,7 +50,7 @@ try:
                        1, (255, 255, 255),
                        thickness=2, lineType=8, shift=0)
         cv2.imshow("keypoints", blackbox)
-        cv2.waitKey(250)
+        cv2.waitKey(10)
         instance = np.nan_to_num(np.concatenate((instance[0], instance[1])))
         prediction = clf.predict([instance])
         print(prediction)
