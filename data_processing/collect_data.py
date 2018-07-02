@@ -49,7 +49,7 @@ try:
        record = "n"
     
     ###Visualize and record keypoints###
-    while record == '': #while enter is the only thing pressed
+    while record == '' or record == 's': #while enter is the only thing pressed
       data = list()
       for x in range(0, 30): #read 30 frames at a time
         #Read next frame
@@ -82,10 +82,10 @@ try:
                                        cls_boxes,
                                        keypoints=cls_keyps)
       cv2.imshow("image", vis)
-      cv2.waitKey(1)
+      cv2.waitKey(100)
             
       #Prompt user for saving individual instance
-      record = raw_input("Continue recording for "+clas+"? (enter/n): ")
+      record = raw_input("Continue recording for "+clas+" or skip frames? (enter/n/s): ")
       if record == '':
           keypoints[clas] = keypoints[clas] + data
             
