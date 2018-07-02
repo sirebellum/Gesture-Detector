@@ -45,8 +45,10 @@ cfg_orig = load_cfg(yaml.dump(cfg))
 
 #Download model of choice from https://github.com/facebookresearch/Detectron/blob/master/MODEL_ZOO.md"
 #Yaml files available at https://github.com/facebookresearch/Detectron/tree/master/configs
-pkl = "model_files/kps_R-50-FPN.pkl"
-yml = "model_files/kps_R-50-FPN.yaml"
+models_dir = os.path.join(os.path.dirname(__file__), 'model_files')
+pkl = models_dir+"/kps_R-50-FPN.pkl"
+yml = models_dir+"/kps_R-50-FPN.yaml"
+print (pkl)
 if not os.path.isfile(pkl):
     exit("MODEL FILES NOT FOUND (check kpdetection.py)")
 
