@@ -23,15 +23,15 @@ random.shuffle(combined)
 X[:], Y[:] = zip(*combined)
 
 #Train
-clf = svm.SVC(kernel='poly')
+clf = svm.SVC(kernel='linear')
 dataset_size = len(Y)
 train_size = int(dataset_size*0.8)
 clf.fit(X[0:train_size], Y[0:train_size])
 
 #Predict
 eval_size = dataset_size - train_size
-y_pred = clf.predict(X[eval_size:])
-y_true = Y[eval_size:]
+y_pred = clf.predict(X[train_size:])
+y_true = Y[train_size:]
 
 print("Accuracy:", accuracy_score(y_true, y_pred))
 
