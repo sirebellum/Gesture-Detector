@@ -1,3 +1,6 @@
+"""Runs keypoint recognition on arbitrary media via opencv streams
+   and custom kpdetection Detectron API."""
+
 import cv2
 import kpdetection #Uses Detectron API to return keypoints
 import detectron.utils.vis as vis_utils
@@ -19,7 +22,7 @@ try:
     keyps, boxes = kpdetection.prune(keyps, boxes)
     
     #Draw keypoints on frame
-    visualize = False
+    visualize = True
     if visualize:
         vis = vis_utils.vis_one_image_opencv(im,
                                       cls_boxes,
