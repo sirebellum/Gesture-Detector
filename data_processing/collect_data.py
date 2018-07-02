@@ -2,11 +2,14 @@ import cv2
 import kpdetection #Uses Detectron API to return keypoints
 import detectron.utils.vis as vis_utils
 import numpy as np
+import pickle
 
 #Pickle dictionary for use in svm
 def store_data(keypoints):
     
-    return False
+    filename = "data.p"
+    pickle.dump(keypoints, open( filename, "wb" ))
+    print "Wrote file to", filename
     
 #Review dictionary for use in svm
 def review_data(keypoints):
@@ -88,30 +91,31 @@ try:
                 vis_utils.convert_from_cls_format(cls_boxes,
                                               cls_segms,
                                               cls_keyps)
-        
         #Remove keypoints below thresholds
         keyps, boxes = kpdetection.prune(keyps, boxes)
         
-        #Visualize normalized kps
-        instance = normalize_kp(keyps[0])
-        blackbox = np.zeros(shape=(255, 255), dtype=np.uint8)
-        for x in range(0, 17):
-            cv2.circle(blackbox,
-                       (instance[0][x], instance[1][x]),
-                       1, (255, 255, 255),
-                       thickness=2, lineType=8, shift=0)
-        cv2.imshow("keypoints", blackbox)
+        if len(keyps) > 0: #if anything detected
         
-        #Visualize keypoints on image
-        vis = vis_utils.vis_one_image_opencv(frame,
-                                         cls_boxes,
-                                         keypoints=cls_keyps)
-        cv2.imshow("image", vis)
-        cv2.waitKey(100)
-        
-        record = raw_input("Continue recording for "+clas+"? (enter/n): ")
-        if record == '':
-            keypoints[clas].append(keyps[0])
+            #Visualize normalized kps
+            instance = normalize_kp(keyps[0])
+            blackbox = np.zeros(shape=(255, 255), dtype=np.uint8)
+            for x in range(0, 17):
+                cv2.circle(blackbox,
+                           (instance[0][x], instance[1][x]),
+                           1, (255, 255, 255),
+                           thickness=2, lineType=8, shift=0)
+            cv2.imshow("keypoints", blackbox)
+            #Visualize keypoints on image
+            vis = vis_utils.vis_one_image_opencv(frame,
+                                             cls_boxes,
+                                             keypoints=cls_keyps)
+            cv2.imshow("image", vis)
+            cv2.waitKey(100)
+            
+            #Prompt user for saving individual instance
+            record = raw_input("Continue recording for "+clas+"? (enter/n): ")
+            if record == '':
+                keypoints[clas].append(keyps[0])
             
  
     print "Done recording for", clas+"."
